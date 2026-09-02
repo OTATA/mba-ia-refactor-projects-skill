@@ -1,34 +1,23 @@
-from flask import Flask
-from flask_cors import CORS
-from database import db
-from routes.task_routes import task_bp
-from routes.user_routes import user_bp
-from routes.report_routes import report_bp
-import os, sys, json, datetime
+"""Entry point da aplicação.
 
-app = Flask(__name__)
+Mantido na raiz para preservar `python app.py`. A montagem da aplicação está
+em `src/app.py`; aqui só existe o arranque do servidor de desenvolvimento.
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'super-secret-key-123'
+O original chamava `app.run(debug=True, host='0.0.0.0')` com valores fixos:
+o debugger do Werkzeug, que permite executar código no processo, ficava
+exposto em todas as interfaces de rede. Agora host, porta e debug vêm da
+configuração, e em produção o servidor é o gunicorn:
 
-CORS(app)
-db.init_app(app)
+    gunicorn "app:app" --bind 0.0.0.0:5000
+"""
 
-app.register_blueprint(task_bp)
-app.register_blueprint(user_bp)
-app.register_blueprint(report_bp)
+from src.app import create_app
 
-@app.route('/health')
-def health():
-    return {'status': 'ok', 'timestamp': str(datetime.datetime.now())}
+app = create_app()
 
-@app.route('/')
-def index():
-    return {'message': 'Task Manager API', 'version': '1.0'}
-
-with app.app_context():
-    db.create_all()
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(
+        host=app.config["HOST"],
+        port=app.config["PORT"],
+        debug=app.config["DEBUG"],
+    )

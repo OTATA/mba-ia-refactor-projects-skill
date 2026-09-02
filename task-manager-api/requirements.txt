@@ -1,6 +1,16 @@
-flask==3.0.0
+# Versões escolhidas para eliminar as 10 CVEs das versões anteriores
+# (flask-cors 4.0.0: CVE-2024-1681/6221/6839/6844/6866 · flask 3.0.0:
+# CVE-2026-27205 · python-dotenv 1.0.0: CVE-2026-28684).
+# `requests` e `marshmallow` foram removidos: nunca eram importados e ambos
+# carregavam CVE (CVE-2024-47081 e CVE-2025-68480).
+flask==3.1.3
 flask-sqlalchemy==3.1.1
-flask-cors==4.0.0
-marshmallow==3.20.1
-requests==2.31.0
-python-dotenv==1.0.0
+flask-cors==6.0.5
+python-dotenv==1.2.3
+pyjwt==2.13.0
+
+# Servidor WSGI de produção — `app.run()` só serve para desenvolvimento.
+gunicorn==23.0.0
+
+# Testes
+pytest==9.1.1

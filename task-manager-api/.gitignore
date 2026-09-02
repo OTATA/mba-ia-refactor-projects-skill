@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Banco local — dado de desenvolvimento não entra no repositório
+*.db
+*.sqlite
+*.sqlite3
+
+# Segredos
+.env
+
+.venv/
+venv/
+.pytest_cache/
+.idea/
+.vscode/
